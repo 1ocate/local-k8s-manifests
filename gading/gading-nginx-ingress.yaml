@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gading-nginx-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gading.duckdns.org
+    http:
+      paths:
+        - pathType: Prefix
+          backend:
+            service:
+              name: gading-nginx-service
+              port:
+                number: 80
+          path: /
