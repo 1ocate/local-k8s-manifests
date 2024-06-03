@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: gading-nginx
-  namespace: gading
+  namespace: default
   labels:
     run: gading-nginx
 spec:
