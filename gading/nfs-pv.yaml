@@ -2,7 +2,6 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: nfs-pv
-  namespace: gading
 spec:
   capacity:
     storage: 50Gi  # 명시적으로 용량을 설정
