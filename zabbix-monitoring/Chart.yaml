@@ -1,0 +1,14 @@
+apiVersion: v2
+name: zabbix-helm-chrt
+description: A Helm chart for Zabbix Local Monitor
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"
+
+dependencies:
+- name: zabbix-helm-chrt
+  version: 1.3.5
+  repository: https://cdn.zabbix.com/zabbix/integrations/kubernetes-helm/6.4
