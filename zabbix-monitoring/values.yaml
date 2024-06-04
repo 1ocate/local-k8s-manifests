@@ -247,10 +247,10 @@ zabbix-helm-chrt:
 
     ## Tolerations configurations
     tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
+      - key: node-role.kubernetes.io
         operator: Equal
         value: master
+        effect: NoSchedule
     ## Affinity configurations
     affinity: {}
     serviceAccount:
