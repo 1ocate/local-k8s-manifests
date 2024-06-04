@@ -228,15 +228,15 @@ zabbix:
     resources: {}
     persistence:
       # -- Whether to enable persistent storage for the postgres container or not
-      enabled: false
+      enabled: true
       # -- Existing persistent volume claim name to be used to store posgres data
-      existingClaimName: false
+      existingClaimName: zabbix-db-pvc
       # -- Size of the PVC to be automatically generated
       storageSize: 5Gi
       # -- Kubernetes uses volume access modes to match PersistentVolumeClaims and PersistentVolumes. See: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
-      #claim_access_mode: "ReadWriteOnce"
+      claim_access_mode: "ReadWriteOnce"
       # -- Storage PVC storageclass to use
-      #storageClass: my-storage-class
+      storageClass: nfs-zabbix-db
     service:
       # -- Type of service to expose the application. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer.
       # More details: https://kubernetes.io/docs/concepts/services-networking/service/
