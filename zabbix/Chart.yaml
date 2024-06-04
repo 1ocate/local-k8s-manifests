@@ -1,0 +1,14 @@
+apiVersion: v2
+name: metallb
+description: A Helm chart for Zabbix
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"
+
+dependencies:
+- name: zabbix
+  version: 4.4.1
+  repository: https://zabbix-community.github.io/helm-zabbix
