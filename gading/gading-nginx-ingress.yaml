@@ -3,7 +3,16 @@ kind: Ingress
 metadata:
   name: gading-nginx-ingress
   namespace: gading
+  annotations:
+    # letsencrypt 설정
+    cert-manager.io/cluster-issuer: "letsencrypt"
+    cert-manager.io/acme-challenge-type: http01
 spec:
+  tls:
+  - hosts:
+    # letsencrypt 도메인
+    - gading.duckdns.org
+    secretName: gading-secret
   ingressClassName: nginx
   rules:
   - host: gading.duckdns.org
