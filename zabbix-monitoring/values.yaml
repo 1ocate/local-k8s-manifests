@@ -22,6 +22,9 @@ zabbix-helm-chrt:
     ## serviceAccount.name  The name of the service account to use. If not set name is generated using the fullname template
     name: zabbix-service-account
 
+  zabbixProxy:
+    enabled: false
+
 ## **Zabbix agent** configurations
   zabbixAgent:
     ## Enables use of Zabbix agent
@@ -70,7 +73,7 @@ zabbix-helm-chrt:
       ## Zabbix agent Docker image name
       repository: zabbix/zabbix-agent2
       ## Tag of Docker image of Zabbix agent
-      tag: alpine-6.0.14
+      tag: alpine-6.0-latest
       pullPolicy: IfNotPresent
       ## List of dockerconfig secrets names to use when pulling images. Secrets must be manually created in the namespace.
       ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
