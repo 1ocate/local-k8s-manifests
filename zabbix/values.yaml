@@ -141,7 +141,7 @@ zabbix:
     service:
       # -- Type of service to expose the application. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. 
       #More details: https://kubernetes.io/docs/concepts/services-networking/service/
-      type: ClusterIP
+      type: LoadBalancer
       # -- clusterIP is the IP address of the service and is usually assigned randomly. 
       #If an address is specified manually, is in-range (as per system configuration), and is not in use, it will be allocated to the service.
       clusterIP: ""
