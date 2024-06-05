@@ -70,7 +70,7 @@ zabbix-helm-chrt:
       ## Zabbix agent Docker image name
       repository: zabbix/zabbix-agent2
       ## Tag of Docker image of Zabbix agent
-      tag: alpine-7.0-latest
+      tag: alpine-5.0-latest
       pullPolicy: IfNotPresent
       ## List of dockerconfig secrets names to use when pulling images. Secrets must be manually created in the namespace.
       ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
