@@ -517,6 +517,11 @@ zabbix:
     # -- The kubelet uses startup probes to know when a container application has started.  Reference: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
     startupProbe: {}
 
+# **Zabbix Web Service** configurations
+  zabbixWebService:
+    # -- Enables use of **Zabbix Web Service**
+    enabled: false 
+
 # Ingress configurations
   ingress:
     # -- Enables Ingress
