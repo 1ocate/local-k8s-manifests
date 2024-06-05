@@ -213,7 +213,7 @@ zabbix-helm-chrt:
     env:
         ## Zabbix server host
       - name: ZBX_SERVER_HOST
-        value: "zabbix-zabbix-server.zabbix-server.svc.cluster.local"
+        value: zabbix-zabbix-server.zabbix-server.svc.cluster.local
         ## Zabbix server port
       - name: ZBX_SERVER_PORT
         value: 10051
