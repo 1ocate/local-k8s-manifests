@@ -295,7 +295,7 @@ zabbix:
       # -- Zabbix Agent Docker image name. Can use zabbix/zabbix-agent or zabbix/zabbix-agent2
       repository: zabbix/zabbix-agent2
       # -- Zabbix Agent Docker image tag, if you want to override zabbixImageTag
-      tag: null
+      tag: :alpine-6.0-latest
       # -- Pull policy of Docker image
       pullPolicy: IfNotPresent
       # -- List of dockerconfig secrets names to use when pulling images
