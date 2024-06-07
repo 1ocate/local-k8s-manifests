@@ -3,30 +3,30 @@
 # Declare name/value pairs to be passed into your templates.
 # name: value
 jenkins: 
-## Overrides for generated resource names
-# See templates/_helpers.tpl
-# -- Override the resource name prefix
-# @default -- `Chart.Name`
+  ## Overrides for generated resource names
+  # See templates/_helpers.tpl
+  # -- Override the resource name prefix
+  # @default -- `Chart.Name`
   nameOverride:
-# -- Override the full resource names
-# @default -- `jenkins-(release-name)` or `jenkins` if the release-name is `jenkins`
+  # -- Override the full resource names
+  # @default -- `jenkins-(release-name)` or `jenkins` if the release-name is `jenkins`
   fullnameOverride:
-# -- Override the deployment namespace
-# @default -- `Release.Namespace`
+  # -- Override the deployment namespace
+  # @default -- `Release.Namespace`
   namespaceOverride:
 
-# For FQDN resolving of the controller service. Change this value to match your existing configuration.
-# ref: https://github.com/kubernetes/dns/blob/master/docs/specification.md
-# -- Override the cluster name for FQDN resolving
+  # For FQDN resolving of the controller service. Change this value to match your existing configuration.
+  # ref: https://github.com/kubernetes/dns/blob/master/docs/specification.md
+  # -- Override the cluster name for FQDN resolving
   clusterZone: "cluster.local"
 
-# -- The URL of the Kubernetes API server
+  # -- The URL of the Kubernetes API server
   kubernetesURL: "https://kubernetes.default"
 
-# -- The Jenkins credentials to access the Kubernetes API server. For the default cluster it is not needed.
+  # -- The Jenkins credentials to access the Kubernetes API server. For the default cluster it is not needed.
   credentialsId:
 
-# -- Enables rendering of the helm.sh/chart label to the annotations
+  # -- Enables rendering of the helm.sh/chart label to the annotations
   renderHelmLabels: true
 
   controller:
@@ -112,13 +112,13 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    resources: {}
-      # requests:
-      #   cpu: "50m"
-      #   memory: "256Mi"
-      # limits:
-      #   cpu: "2000m"
-      #   memory: "4096Mi"
+    # resources:
+    #   requests:
+    #     cpu: "50m"
+    #     memory: "256Mi"
+    #   limits:
+    #     cpu: "2000m"
+    #     memory: "4096Mi"
 
     # Share process namespace to allow sidecar containers to interact with processes in other containers in the same pod
     shareProcessNamespace: false
@@ -877,7 +877,7 @@ jenkins:
 
   agent:
     # -- Enable Kubernetes plugin jnlp-agent podTemplate
-    enabled: false
+    enabled: true
     # -- The name of the pod template to use for providing default values
     defaultsProviderTemplate: ""
 
@@ -1133,49 +1133,49 @@ jenkins:
     #          resourceLimitCpu: "1"
     #          resourceLimitMemory: "1024Mi"
 
-# Inherits all values from `agent` so you only need to specify values which differ
-# -- Configure additional
+    # Inherits all values from `agent` so you only need to specify values which differ
+    # -- Configure additional
   additionalAgents: {}
-#  maven:
-#    podName: maven
-#    customJenkinsLabels: maven
-#    # An example of overriding the jnlp container
-#    # sideContainerName: jnlp
-#    image:
-#      repository: jenkins/jnlp-agent-maven
-#      tag: latest
-#  python:
-#    podName: python
-#    customJenkinsLabels: python
-#    sideContainerName: python
-#    image:
-#      repository: python
-#      tag: "3"
-#    command: "/bin/sh -c"
-#    args: "cat"
-#    TTYEnabled: true
-
-# Here you can add additional clouds
-# They inherit all values from the default cloud (including the main agent), so
-# you only need to specify values which differ. If you want to override
-# default additionalAgents with the additionalClouds.additionalAgents set
-# additionalAgentsOverride to `true`.
+  #  maven:
+  #    podName: maven
+  #    customJenkinsLabels: maven
+  #    # An example of overriding the jnlp container
+  #    # sideContainerName: jnlp
+  #    image:
+  #      repository: jenkins/jnlp-agent-maven
+  #      tag: latest
+  #  python:
+  #    podName: python
+  #    customJenkinsLabels: python
+  #    sideContainerName: python
+  #    image:
+  #      repository: python
+  #      tag: "3"
+  #    command: "/bin/sh -c"
+  #    args: "cat"
+  #    TTYEnabled: true
+  
+  # Here you can add additional clouds
+  # They inherit all values from the default cloud (including the main agent), so
+  # you only need to specify values which differ. If you want to override
+  # default additionalAgents with the additionalClouds.additionalAgents set
+  # additionalAgentsOverride to `true`.
   additionalClouds: {}
-#  remote-cloud-1:
-#    kubernetesURL: https://api.remote-cloud.com
-#    additionalAgentsOverride: true
-#    additionalAgents:
-#      maven-2:
-#        podName: maven-2
-#        customJenkinsLabels: maven
-#        # An example of overriding the jnlp container
-#        # sideContainerName: jnlp
-#        image:
-#          repository: jenkins/jnlp-agent-maven
-#          tag: latest
-#        namespace: my-other-maven-namespace
-#  remote-cloud-2:
-#    kubernetesURL: https://api.remote-cloud.com
+  #  remote-cloud-1:
+  #    kubernetesURL: https://api.remote-cloud.com
+  #    additionalAgentsOverride: true
+  #    additionalAgents:
+  #      maven-2:
+  #        podName: maven-2
+  #        customJenkinsLabels: maven
+  #        # An example of overriding the jnlp container
+  #        # sideContainerName: jnlp
+  #        image:
+  #          repository: jenkins/jnlp-agent-maven
+  #          tag: latest
+  #        namespace: my-other-maven-namespace
+  #  remote-cloud-2:
+  #    kubernetesURL: https://api.remote-cloud.com
 
   persistence:
     # -- Enable the use of a Jenkins PVC
@@ -1193,7 +1193,7 @@ jenkins:
     # If undefined (the default) or set to null, no storageClassName spec is
     #   set, choosing the default provisioner (gp2 on AWS, standard on GKE, AWS & OpenStack)
     # -- Storage class for the PVC
-    storageClass:
+    storageClass: nfs-jenkins
     # -- Annotations for the PVC
     annotations: {}
     # -- Labels for the PVC
@@ -1246,7 +1246,7 @@ jenkins:
       except: []
         # - 172.17.1.0/24
 
-## Install Default RBAC roles and bindings
+  ## Install Default RBAC roles and bindings
   rbac:
     # -- Whether RBAC resources are created
     create: true
@@ -1282,7 +1282,7 @@ jenkins:
     # -- Agent ServiceAccount image pull secret
     imagePullSecretName:
 
-# -- Checks if any deprecated values are used
+  # -- Checks if any deprecated values are used
   checkDeprecation: true
 
   awsSecurityGroupPolicies:
@@ -1292,7 +1292,7 @@ jenkins:
         securityGroupIds: []
         podSelector: {}
 
-# Here you can configure unit tests values when executing the helm unittest in the CONTRIBUTING.md
+  # Here you can configure unit tests values when executing the helm unittest in the CONTRIBUTING.md
   helmtest:
     # A testing framework for bash
     bats:
