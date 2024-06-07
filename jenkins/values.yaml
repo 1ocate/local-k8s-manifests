@@ -112,15 +112,27 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    resources:
+    resources: {}
+    #   requests:
+    #     cpu: "50m"
+    #     memory: "256Mi"
+    #   limits:
+    #     cpu: "2000m"
+    #     memory: "4096Mi"
 
     # Share process namespace to allow sidecar containers to interact with processes in other containers in the same pod
     shareProcessNamespace: false
 
     # Overrides the init container default values
     # -- Resources allocation (Requests and Limits) for Init Container
-    initContainerResources: 
-
+    initContainerResources: {}
+    # initContainerResources:
+    #   requests:
+    #     cpu: "50m"
+    #     memory: "256Mi"
+    #   limits:
+    #     cpu: "2000m"
+    #     memory: "4096Mi"
     # -- Environment variable sources for Init Container
     initContainerEnvFrom: []
 
