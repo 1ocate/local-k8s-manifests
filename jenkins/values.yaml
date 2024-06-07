@@ -112,7 +112,7 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    resources: {}
+    resources: null
     #   requests:
     #     cpu: "50m"
     #     memory: "256Mi"
