@@ -112,27 +112,15 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    resources: {}
-    #   requests:
-    #     cpu: "50m"
-    #     memory: "256Mi"
-    #   limits:
-    #     cpu: "2000m"
-    #     memory: "4096Mi"
+    resources:
 
     # Share process namespace to allow sidecar containers to interact with processes in other containers in the same pod
     shareProcessNamespace: false
 
     # Overrides the init container default values
     # -- Resources allocation (Requests and Limits) for Init Container
-    initContainerResources: {}
-    # initContainerResources:
-    #   requests:
-    #     cpu: "50m"
-    #     memory: "256Mi"
-    #   limits:
-    #     cpu: "2000m"
-    #     memory: "4096Mi"
+    initContainerResources: 
+
     # -- Environment variable sources for Init Container
     initContainerEnvFrom: []
 
@@ -953,7 +941,7 @@ jenkins:
     # the jnlp container cannot be scheduled without overriding its container definition with a securityContext.
     # This option allows to automatically inject in the jnlp container a securityContext
     # that is suitable for the use of the restricted Pod Security Standard.
-    # -- Set a restricted securityContext on jnlp containers
+    # -- Set a restricted securityContext on jnlp c/usr/share/jenkins/jenkins.warontainers
     restrictedPssSecurityContext: false
     # Controls how agent pods are retained after the Jenkins build completes
     # Possible values: Always, Never, OnFailure
