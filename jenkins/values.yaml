@@ -315,7 +315,7 @@ jenkins:
       maxUnavailable: "0"
 
     # -- Create Agent listener service
-    agentListenerEnabled: true
+    agentListenerEnabled: false
     # -- Listening port for agents
     agentListenerPort: 50000
     # -- Host port to listen for agents
