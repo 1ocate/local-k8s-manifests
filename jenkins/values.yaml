@@ -112,7 +112,7 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    # resources:
+    resources: {}
     #   requests:
     #     cpu: "50m"
     #     memory: "256Mi"
@@ -929,7 +929,7 @@ jenkins:
     # -- Enables the agent to use the host network
     hostNetworking: false
     # -- Resources allocation (Requests and Limits)
-    resources:
+    resources: 
       requests:
         cpu: "512m"
         memory: "512Mi"
