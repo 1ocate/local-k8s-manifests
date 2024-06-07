@@ -112,13 +112,13 @@ jenkins:
     #   - --httpPort=8080
 
     # -- Resource allocation (Requests and Limits)
-    resources:
-      requests:
-        cpu: "50m"
-        memory: "256Mi"
-      limits:
-        cpu: "2000m"
-        memory: "4096Mi"
+    resources: {}
+      # requests:
+      #   cpu: "50m"
+      #   memory: "256Mi"
+      # limits:
+      #   cpu: "2000m"
+      #   memory: "4096Mi"
 
     # Share process namespace to allow sidecar containers to interact with processes in other containers in the same pod
     shareProcessNamespace: false
@@ -877,7 +877,7 @@ jenkins:
 
   agent:
     # -- Enable Kubernetes plugin jnlp-agent podTemplate
-    enabled: true
+    enabled: false
     # -- The name of the pod template to use for providing default values
     defaultsProviderTemplate: ""
 
