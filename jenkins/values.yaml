@@ -125,7 +125,7 @@ jenkins:
 
     # Overrides the init container default values
     # -- Resources allocation (Requests and Limits) for Init Container
-    initContainerResources: {}
+    initContainerResources: null
     # initContainerResources:
     #   requests:
     #     cpu: "50m"
