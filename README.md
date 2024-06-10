@@ -1,11 +1,11 @@
 # 로컬 개인 k8s 구축
-* 서버 
+## 서버 
 - OS: Proxmox 8.2.2
-- CPU:Ryzen 7530u
+- CPU: Ryzen 7530u
 - Ram: 32GB
 - Storage: 1TB
 
-* k8s Cluster
+## k8s Cluster
 - version: 1.27(kube-spray)
 - node: 
     - control-plane
