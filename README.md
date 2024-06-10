@@ -1,4 +1,4 @@
-# 로컬 개인 k8s 구축
+# 로컬 개인 k8s 구성정보
 ## 서버 
 - OS: Proxmox 8.2.2
 - CPU: Ryzen 7530u
