@@ -283,9 +283,9 @@ grafana:
     hosts:
       - zabbix-k8s.duckdns.org
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
-    extraPaths: 
-    - path: /
-      pathType: Prefix
+    extraPaths: []
+      #- path: /grafana
+      #  pathType: Prefix
     #   backend:
     #     service:
     #       name: ssl-redirect
