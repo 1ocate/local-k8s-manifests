@@ -536,7 +536,7 @@ zabbix:
     hosts:
       - host: zabbix-k8s.duckdns.org
         paths:
-          - path: /zabbix
+          - path: /zabbix(/|$)(.*)
             pathType: ImplementationSpecific
     # -- Ingress TLS configuration
     tls:
