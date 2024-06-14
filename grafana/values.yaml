@@ -275,15 +275,11 @@ grafana:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/rewrite-target: /$2
-      # cert-manager.io/cluster-issuer: "letsencrypt"
-      # cert-manager.io/acme-challenge-type: http01
-    hosts:
-      - host: zabbix-k8s.duckdns.org
-        paths:
-          - path: /grafana(/|$)(.*)
-            pathType: ImplementationSpecific
-
     labels: {}
+    path: /grafana(/|$)(.*)
+    pathType: ImplementationSpecific
+    hosts:
+      - zabbix-k8s.duckdns.org
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
     extraPaths: []
     # path: /grafana(/|$)(.*)
@@ -295,7 +291,7 @@ grafana:
     #         name: use-annotation
 
 
-     #tls: []
+    tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
