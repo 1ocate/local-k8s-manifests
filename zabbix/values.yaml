@@ -525,7 +525,7 @@ zabbix:
 # Ingress configurations
   ingress:
     # -- Enables Ingress
-    enabled: false
+    enabled: true
     # -- Ingress annotations
     annotations:
       # letsencrypt 설정
