@@ -780,10 +780,10 @@ grafana:
     grafana_net:
       url: https://grafana.net
     server:
-      domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
-      root_uri: "https://%(domain)s/grafana"
-      #domain: "zabbix-k8s.duckdns.org"
-      #root_url: "https://zabbix-k8s.duckdns.org/grafana"
+      #domain: "{{ if (and .Values.ingress.enabled .Values.ingress.hosts) }}{{ .Values.ingress.hosts | first }}{{ else }}''{{ end }}"
+      #root_uri: "https://%(domain)s/grafana"
+      domain: "zabbix-k8s.duckdns.org"
+      root_url: "https://zabbix-k8s.duckdns.org/grafana"
       serve_from_sub_path: true
 ## grafana Authentication can be enabled with the following values on grafana.ini
    # server:
