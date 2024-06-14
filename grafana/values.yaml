@@ -272,10 +272,10 @@ grafana:
     ingressClassName: nginx
     # Values can be templated
     labels: {}
-    annotations:
+    annotations: []
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
-      # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    #ingress path route를 사용하기 위해 추가      
     path: /grafana(/|$)(.*)
     pathType: ImplementationSpecific
     hosts:
