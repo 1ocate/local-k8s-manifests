@@ -1,3 +1,5 @@
 ingress-nginx:
+  #admission webhook "validate.nginx.ingress.kubernetes.io" denied the request: nginx.ingress.kubernetes.io/server-snippet annotation cannot be used. Snippet directives are disabled by the Ingress administrator
+  #위의 에러를 해결하기 위해 권한 추가
   controller:
     allowSnippetAnnotations: true
