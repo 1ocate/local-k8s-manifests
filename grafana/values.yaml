@@ -273,9 +273,9 @@ grafana:
     # Values can be templated
     labels: {}
     annotations:
-      kubernetes.io/ingress.class: nginx
-      kubernetes.io/tls-acme: "true"
-      nginx.ingress.kubernetes.io/rewrite-target: /$1
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /grafana(/|$)(.*)
     pathType: ImplementationSpecific
     hosts:
