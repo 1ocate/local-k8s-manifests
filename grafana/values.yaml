@@ -277,7 +277,7 @@ grafana:
       # kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/rewrite-target: /$2
     path: /grafana(/|$)(.*)
-    pathType: ImplementationSpecific
+    pathType: prefix
     hosts:
       - grafana.local
     ## Extra paths to prepend to every host configuration. This is useful when working with annotation based services.
