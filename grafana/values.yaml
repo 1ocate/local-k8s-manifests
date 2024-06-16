@@ -372,7 +372,7 @@ grafana:
     ## Sub-directory of the PV to mount. Can be templated.
     # subPath: ""
     ## Name of an existing PVC. Can be templated.
-    existingClaim: grafana-pvc 
+    #existingClaim: grafana-pvc 
     ## Extra labels to apply to a PVC.
     extraPvcLabels: {}
 
