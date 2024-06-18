@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bot
+  namespace: telegram
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+    spec:
+      initContainers:
+      - name: init-telegram-bot
+        image: python:3
+        command: ["sh", "-c"]
+        args: ["pip install -r /usr/src/app/requirements.txt"]
+        volumeMounts:
+        - name: telegram-bot-volume
+          mountPath: /usr/src/app
+      containers:
+      - name: telegram-bot
+        image: python:3
+        command: ["python"]
+        args: ["/usr/src/app/telegram-bot.py"]
+        env:
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-bot-secret
+              key: TELEGRAM_BOT_TOKEN
+        volumeMounts:
+        - name: telegram-bot-volume
+          mountPath: /usr/src/app
+      volumes:
+      - name: telegram-bot-volume
+        persistentVolumeClaim:
+          claimName: telegramjenkins-bot-pvc
+
