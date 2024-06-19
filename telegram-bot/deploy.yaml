@@ -29,7 +29,7 @@ spec:
         args: ["/usr/src/app/telegram-bot.py"]
         env:
         - name: PYTHONPATH
-          value: "/shared-packages"
+          value: "/requirements-module"
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
