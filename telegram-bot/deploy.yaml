@@ -21,6 +21,8 @@ spec:
         volumeMounts:
         - name:  requirements-module
           mountPath: /requirements-module
+        - name: telegram-bot-volume
+          mountPath: /usr/src/app
       containers:
       - name: telegram-bot
         image: python:3
