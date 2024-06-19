@@ -38,5 +38,5 @@ spec:
       volumes:
       - name: telegram-bot-volume
         persistentVolumeClaim:
-          claimName: telegramjenkins-bot-pvc
+          claimName: telegram-bot-pvc
 
