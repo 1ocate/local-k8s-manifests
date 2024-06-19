@@ -17,7 +17,8 @@ spec:
       - name: init-telegram-bot
         image: python:3
         command: ["sh", "-c"]
-        args: ["pip install -r /usr/src/app/requirements.txt"]
+        #args: ["pip install -r /usr/src/app/requirements.txt"]
+        args: ["pip install python-telegram-bot --upgrade"]
         volumeMounts:
         - name: telegram-bot-volume
           mountPath: /usr/src/app
