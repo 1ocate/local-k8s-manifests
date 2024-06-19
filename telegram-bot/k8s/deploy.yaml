@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: telegram-bot
-  namespace: telegram
+  name: telegram-bot-deploy
+  namespace: telegram-bot
 spec:
   replicas: 1
   selector:
