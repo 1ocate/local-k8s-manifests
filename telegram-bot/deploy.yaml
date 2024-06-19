@@ -19,7 +19,7 @@ spec:
         command: ["sh", "-c"]
         args: ["pip install -r /usr/src/app/requirements.txt -t /requirements-module"]
         volumeMounts:
-        - name:  requirements-module
+        - name: requirements-module
           mountPath: /requirements-module
         - name: telegram-bot-volume
           mountPath: /usr/src/app
@@ -37,12 +37,12 @@ spec:
               name: telegram-bot-secret
               key: TELEGRAM_BOT_TOKEN
         volumeMounts:
-        - name:  requirements-module
+        - name: requirements-module
           mountPath: /requirements-module
         - name: telegram-bot-volume
           mountPath: /usr/src/app
       volumes:
-      - name:  requirements-module
+      - name: requirements-module
         emptyDir: {}
       - name: telegram-bot-volume
         persistentVolumeClaim:
