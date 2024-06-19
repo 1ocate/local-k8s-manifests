@@ -17,8 +17,7 @@ spec:
       - name: init-python-packages
         image: python:3
         command: ["sh", "-c"]
-        #args: ["pip install -r /usr/src/app/requirements.txt"]
-        args: ["pip install python-telegram-bot --upgrade -t /requirements-module"]
+        args: ["pip install -r /usr/src/app/requirements.txt -t /requirements-module"]
         volumeMounts:
         - name:  requirements-module
           mountPath: /requirements-module
