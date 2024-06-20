@@ -13,37 +13,19 @@ spec:
       labels:
         app: telegram-bot
     spec:
-      initContainers:
-      - name: init-python-packages
-        image: python:3
-        command: ["sh", "-c"]
-        args: ["pip install -r /usr/src/app/requirements.txt -t /requirements-module"]
-        volumeMounts:
-        - name: requirements-module
-          mountPath: /requirements-module
-        - name: telegram-bot-volume
-          mountPath: /usr/src/app
       containers:
       - name: telegram-bot
         image: python:3
-        command: ["python"]
-        args: ["/usr/src/app/telegram-bot.py"]
-        env:
-        - name: PYTHONPATH
-          value: "/requirements-module"
-        - name: TELEGRAM_BOT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: telegram-bot-secret
-              key: TELEGRAM_BOT_TOKEN
+        command: ["sh", "-c"]
+        args: [
+          "apt-get update && apt-get install -y iputils-ping && \
+          pip install -r /usr/src/app/requirements.txt && \
+          python /usr/src/app/telegram-bot.py"
+        ]
         volumeMounts:
-        - name: requirements-module
-          mountPath: /requirements-module
         - name: telegram-bot-volume
           mountPath: /usr/src/app
       volumes:
-      - name: requirements-module
-        emptyDir: {}
       - name: telegram-bot-volume
         persistentVolumeClaim:
           claimName: telegram-bot-pvc
