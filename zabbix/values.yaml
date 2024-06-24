@@ -106,7 +106,11 @@ zabbix:
       # -- Requests and limits of pod resources. See: [https://kubernetes.io/docs/concepts/configuration/manage-resources-containers](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers)
       resources: {}
       # -- Extra environment variables. A list of additional environment variables.
-      extraEnv: []
+      extraEnv: 
+      - name: ZBX_CACHESIZE
+        value: 256M
+      - name: ZBX_VALUECACHESIZE
+        value: 256M
       # -- Additional volumeMounts to the cronjob hanodes autoclean
       extraVolumeMounts: []
       # -- Additional containers to start within the cronjob hanodes autoclean
