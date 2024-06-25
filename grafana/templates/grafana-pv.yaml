@@ -6,7 +6,7 @@ spec:
   capacity:
     storage: 5Gi  # 명시적으로 용량을 설정
   accessModes:
-    - ReadWriteOnce 
+    - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   storageClassName: nfs-grafana
   nfs:
