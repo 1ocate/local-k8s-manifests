@@ -363,7 +363,7 @@ grafana:
     enabled: true
     storageClassName: nfs-grafana
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
     size: 5Gi
     # annotations: {}
     finalizers:
