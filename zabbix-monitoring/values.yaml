@@ -5,7 +5,7 @@ zabbix-helm-chrt:
   fullnameOverride: ""
 ## kube-state-metrics.enabled -- If true, deploys the kube-state-metrics deployment
   kube-state-metrics:
-    enabled: false
+    enabled: true
 
 ## Service accoun for Kubernetes API
   rbac:
