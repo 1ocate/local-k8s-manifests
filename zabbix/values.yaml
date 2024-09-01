@@ -236,7 +236,7 @@ zabbix:
       # -- Existing persistent volume claim name to be used to store posgres data
       existingClaimName: zabbix-db-pvc
       # -- Size of the PVC to be automatically generated
-      storageSize: 5Gi
+      storageSize: 10Gi
       # -- Kubernetes uses volume access modes to match PersistentVolumeClaims and PersistentVolumes. See: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
       claim_access_mode: "ReadWriteOnce"
       # -- Storage PVC storageclass to use
