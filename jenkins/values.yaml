@@ -88,7 +88,7 @@ jenkins:
       # The default configuration uses this secret to configure an admin user
       # If you don't need that user or use a different security realm, then you can disable it
       # -- Create secret for admin user
-      createSecret: false
+      createSecret: true
 
       # -- The name of an existing secret containing the admin credentials
       existingSecret: ""
@@ -123,9 +123,15 @@ jenkins:
     # Share process namespace to allow sidecar containers to interact with processes in other containers in the same pod
     shareProcessNamespace: false
 
+    # Service links might cause issue if running in a namespace with a large amount of services
+    # that might cause a slow startup when plugins are copied from ref to volume
+    # Set to true to keep previous behavior
+    # See https://github.com/kubernetes/kubernetes/issues/121787
+    enableServiceLinks: false
+
     # Overrides the init container default values
     # -- Resources allocation (Requests and Limits) for Init Container
-    initContainerResources: null
+    initContainerResources: {}
     # initContainerResources:
     #   requests:
     #     cpu: "50m"
@@ -390,13 +396,9 @@ jenkins:
     #   port: 9000
     #   targetPort: 9010 (Optional: Use to explicitly set targetPort if different from port)
 
-    # Plugins will be installed during Jenkins controller start
     # -- List of Jenkins plugins to install. If you don't want to install plugins, set it to `false`
-    installPlugins:
-      - kubernetes:4244.v4fb_b_00994a_90
-      - workflow-aggregator:596.v8c21c963d92d
-      - git:5.2.2
-      - configuration-as-code:1810.v9b_c30a_249a_4c
+    installPlugins: false
+    # Plugins will be installed during Jenkins controller start
 
     # If set to false, Jenkins will download the minimum required version of all dependencies.
     # -- Download the minimum required version or latest version of all dependencies
@@ -533,6 +535,10 @@ jenkins:
       authorizationStrategy: |-
         loggedInUsersCanDoAnything:
           allowAnonymousRead: false
+
+      # -- Annotations for the JCasC ConfigMap
+      configMapAnnotations: {}
+
     # -- Custom init-container specification in raw-yaml format
     customInitContainers: []
     # - name: custom-init
@@ -554,7 +560,7 @@ jenkins:
           # -- Repository of the image that triggers the reload
           repository: kiwigrid/k8s-sidecar
           # -- Tag for the image that triggers the reload
-          tag: 1.27.3
+          tag: 1.27.6
         imagePullPolicy: IfNotPresent
         resources: {}
           #   limits:
@@ -563,6 +569,24 @@ jenkins:
           #   requests:
           #     cpu: 50m
           #     memory: 50Mi
+        # -- Enables additional volume mounts for the config auto-reload container
+        additionalVolumeMounts: []
+          #   - name: auto-reload-config
+          #     mountPath: /var/config/logger
+          #   - name: auto-reload-logs
+          #     mountPath: /var/log/auto_reload
+        # -- Config auto-reload logging settings
+        logging:
+          # See default settings https://github.com/kiwigrid/k8s-sidecar/blob/master/src/logger.py
+          configuration:
+            # -- Enables custom log config utilizing using the settings below.
+            override: false
+            logLevel: INFO
+            formatter: JSON
+            logToConsole: true
+            logToFile: false
+            maxBytes: 1024
+            backupCount: 3
 
         # -- The scheme to use when connecting to the Jenkins configuration as code endpoint
         scheme: http
@@ -650,6 +674,9 @@ jenkins:
     # ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
     # -- Update strategy for StatefulSet
     updateStrategy: {}
+
+    # -- Topology spread constraints
+    topologySpreadConstraints: {}
 
     ingress:
       # -- Enables ingress
@@ -834,52 +861,60 @@ jenkins:
       # -- Base64 encoded Keystore content. Keystore must be converted to base64 then being pasted here
       jenkinsKeyStoreBase64Encoded:
       # Convert keystore.jks files content to base64 > $ cat keystore.jks | base64
-#        /u3+7QAAAAIAAAABAAAAAQANamVua2luc2NpLmNvbQAAAW2r/b1ZAAAFATCCBP0wDgYKKwYBBAEq
-#        AhEBAQUABIIE6QbCqasvoHS0pSwYqSvdydMCB9t+VNfwhFIiiuAelJfO5sSe2SebJbtwHgLcRz1Z
-#        gMtWgOSFdl3bWSzA7vrW2LED52h+jXLYSWvZzuDuh8hYO85m10ikF6QR+dTi4jra0whIFDvq3pxe
-#        TnESxEsN+DvbZM3jA3qsjQJSeISNpDjO099dqQvHpnCn18lyk7J4TWJ8sOQQb1EM2zDAfAOSqA/x
-#        QuPEFl74DlY+5DIk6EBvpmWhaMSvXzWZACGA0sYqa157dq7O0AqmuLG/EI5EkHETO4CrtBW+yLcy
-#        2dUCXOMA+j+NjM1BjrQkYE5vtSfNO6lFZcISyKo5pTFlcA7ut0Fx2nZ8GhHTn32CpeWwNcZBn1gR
-#        pZVt6DxVVkhTAkMLhR4rL2wGIi/1WRs23ZOLGKtyDNvDHnQyDiQEoJGy9nAthA8aNHa3cfdF10vB
-#        Drb19vtpFHmpvKEEhpk2EBRF4fTi644Fuhu2Ied6118AlaPvEea+n6G4vBz+8RWuVCmZjLU+7h8l
-#        Hy3/WdUPoIL5eW7Kz+hS+sRTFzfu9C48dMkQH3a6f3wSY+mufizNF9U298r98TnYy+PfDJK0bstG
-#        Ph6yPWx8DGXKQBwrhWJWXI6JwZDeC5Ny+l8p1SypTmAjpIaSW3ge+KgcL6Wtt1R5hUV1ajVwVSUi
-#        HF/FachKqPqyLJFZTGjNrxnmNYpt8P1d5JTvJfmfr55Su/P9n7kcyWp7zMcb2Q5nlXt4tWogOHLI
-#        OzEWKCacbFfVHE+PpdrcvCVZMDzFogIq5EqGTOZe2poPpBVE+1y9mf5+TXBegy5HToLWvmfmJNTO
-#        NCDuBjgLs2tdw2yMPm4YEr57PnMX5gGTC3f2ZihXCIJDCRCdQ9sVBOjIQbOCzxFXkVITo0BAZhCi
-#        Yz61wt3Ud8e//zhXWCkCsSV+IZCxxPzhEFd+RFVjW0Nm9hsb2FgAhkXCjsGROgoleYgaZJWvQaAg
-#        UyBzMmKDPKTllBHyE3Gy1ehBNGPgEBChf17/9M+j8pcm1OmlM434ctWQ4qW7RU56//yq1soFY0Te
-#        fu2ei03a6m68fYuW6s7XEEK58QisJWRAvEbpwu/eyqfs7PsQ+zSgJHyk2rO95IxdMtEESb2GRuoi
-#        Bs+AHNdYFTAi+GBWw9dvEgqQ0Mpv0//6bBE/Fb4d7b7f56uUNnnE7mFnjGmGQN+MvC62pfwfvJTT
-#        EkT1iZ9kjM9FprTFWXT4UmO3XTvesGeE50sV9YPm71X4DCQwc4KE8vyuwj0s6oMNAUACW2ClU9QQ
-#        y0tRpaF1tzs4N42Q5zl0TzWxbCCjAtC3u6xf+c8MCGrr7DzNhm42LOQiHTa4MwX4x96q7235oiAU
-#        iQqSI/hyF5yLpWw4etyUvsx2/0/0wkuTU1FozbLoCWJEWcPS7QadMrRRISxHf0YobIeQyz34regl
-#        t1qSQ3dCU9D6AHLgX6kqllx4X0fnFq7LtfN7fA2itW26v+kAT2QFZ3qZhINGfofCja/pITC1uNAZ
-#        gsJaTMcQ600krj/ynoxnjT+n1gmeqThac6/Mi3YlVeRtaxI2InL82ZuD+w/dfY9OpPssQjy3xiQa
-#        jPuaMWXRxz/sS9syOoGVH7XBwKrWpQcpchozWJt40QV5DslJkclcr8aC2AGlzuJMTdEgz1eqV0+H
-#        bAXG9HRHN/0eJTn1/QAAAAEABVguNTA5AAADjzCCA4swggJzAhRGqVxH4HTLYPGO4rzHcCPeGDKn
-#        xTANBgkqhkiG9w0BAQsFADCBgTELMAkGA1UEBhMCY2ExEDAOBgNVBAgMB29udGFyaW8xEDAOBgNV
-#        BAcMB3Rvcm9udG8xFDASBgNVBAoMC2plbmtpbnN0ZXN0MRkwFwYDVQQDDBBqZW5raW5zdGVzdC5p
-#        bmZvMR0wGwYJKoZIhvcNAQkBFg50ZXN0QHRlc3QuaW5mbzAeFw0xOTEwMDgxNTI5NTVaFw0xOTEx
-#        MDcxNTI5NTVaMIGBMQswCQYDVQQGEwJjYTEQMA4GA1UECAwHb250YXJpbzEQMA4GA1UEBwwHdG9y
-#        b250bzEUMBIGA1UECgwLamVua2luc3Rlc3QxGTAXBgNVBAMMEGplbmtpbnN0ZXN0LmluZm8xHTAb
-#        BgkqhkiG9w0BCQEWDnRlc3RAdGVzdC5pbmZvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-#        AQEA02q352JTHGvROMBhSHvSv+vnoOTDKSTz2aLQn0tYrIRqRo+8bfmMjXuhkwZPSnCpvUGNAJ+w
-#        Jrt/dqMoYUjCBkjylD/qHmnXN5EwS1cMg1Djh65gi5JJLFJ7eNcoSsr/0AJ+TweIal1jJSP3t3PF
-#        9Uv21gm6xdm7HnNK66WpUUXLDTKaIs/jtagVY1bLOo9oEVeLN4nT2CYWztpMvdCyEDUzgEdDbmrP
-#        F5nKUPK5hrFqo1Dc5rUI4ZshL3Lpv398aMxv6n2adQvuL++URMEbXXBhxOrT6rCtYzbcR5fkwS9i
-#        d3Br45CoWOQro02JAepoU0MQKY5+xQ4Bq9Q7tB9BAwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQAe
-#        4xc+mSvKkrKBHg9/zpkWgZUiOp4ENJCi8H4tea/PCM439v6y/kfjT/okOokFvX8N5aa1OSz2Vsrl
-#        m8kjIc6hiA7bKzT6lb0EyjUShFFZ5jmGVP4S7/hviDvgB5yEQxOPpumkdRP513YnEGj/o9Pazi5h
-#        /MwpRxxazoda9r45kqQpyG+XoM4pB+Fd3JzMc4FUGxfVPxJU4jLawnJJiZ3vqiSyaB0YyUL+Er1Q
-#        6NnqtR4gEBF0ZVlQmkycFvD4EC2boP943dLqNUvop+4R3SM1QMM6P5u8iTXtHd/VN4MwMyy1wtog
-#        hYAzODo1Jt59pcqqKJEas0C/lFJEB3frw4ImNx5fNlJYOpx+ijfQs9m39CevDq0=
+  #        /u3+7QAAAAIAAAABAAAAAQANamVua2luc2NpLmNvbQAAAW2r/b1ZAAAFATCCBP0wDgYKKwYBBAEq
+  #        AhEBAQUABIIE6QbCqasvoHS0pSwYqSvdydMCB9t+VNfwhFIiiuAelJfO5sSe2SebJbtwHgLcRz1Z
+  #        gMtWgOSFdl3bWSzA7vrW2LED52h+jXLYSWvZzuDuh8hYO85m10ikF6QR+dTi4jra0whIFDvq3pxe
+  #        TnESxEsN+DvbZM3jA3qsjQJSeISNpDjO099dqQvHpnCn18lyk7J4TWJ8sOQQb1EM2zDAfAOSqA/x
+  #        QuPEFl74DlY+5DIk6EBvpmWhaMSvXzWZACGA0sYqa157dq7O0AqmuLG/EI5EkHETO4CrtBW+yLcy
+  #        2dUCXOMA+j+NjM1BjrQkYE5vtSfNO6lFZcISyKo5pTFlcA7ut0Fx2nZ8GhHTn32CpeWwNcZBn1gR
+  #        pZVt6DxVVkhTAkMLhR4rL2wGIi/1WRs23ZOLGKtyDNvDHnQyDiQEoJGy9nAthA8aNHa3cfdF10vB
+  #        Drb19vtpFHmpvKEEhpk2EBRF4fTi644Fuhu2Ied6118AlaPvEea+n6G4vBz+8RWuVCmZjLU+7h8l
+  #        Hy3/WdUPoIL5eW7Kz+hS+sRTFzfu9C48dMkQH3a6f3wSY+mufizNF9U298r98TnYy+PfDJK0bstG
+  #        Ph6yPWx8DGXKQBwrhWJWXI6JwZDeC5Ny+l8p1SypTmAjpIaSW3ge+KgcL6Wtt1R5hUV1ajVwVSUi
+  #        HF/FachKqPqyLJFZTGjNrxnmNYpt8P1d5JTvJfmfr55Su/P9n7kcyWp7zMcb2Q5nlXt4tWogOHLI
+  #        OzEWKCacbFfVHE+PpdrcvCVZMDzFogIq5EqGTOZe2poPpBVE+1y9mf5+TXBegy5HToLWvmfmJNTO
+  #        NCDuBjgLs2tdw2yMPm4YEr57PnMX5gGTC3f2ZihXCIJDCRCdQ9sVBOjIQbOCzxFXkVITo0BAZhCi
+  #        Yz61wt3Ud8e//zhXWCkCsSV+IZCxxPzhEFd+RFVjW0Nm9hsb2FgAhkXCjsGROgoleYgaZJWvQaAg
+  #        UyBzMmKDPKTllBHyE3Gy1ehBNGPgEBChf17/9M+j8pcm1OmlM434ctWQ4qW7RU56//yq1soFY0Te
+  #        fu2ei03a6m68fYuW6s7XEEK58QisJWRAvEbpwu/eyqfs7PsQ+zSgJHyk2rO95IxdMtEESb2GRuoi
+  #        Bs+AHNdYFTAi+GBWw9dvEgqQ0Mpv0//6bBE/Fb4d7b7f56uUNnnE7mFnjGmGQN+MvC62pfwfvJTT
+  #        EkT1iZ9kjM9FprTFWXT4UmO3XTvesGeE50sV9YPm71X4DCQwc4KE8vyuwj0s6oMNAUACW2ClU9QQ
+  #        y0tRpaF1tzs4N42Q5zl0TzWxbCCjAtC3u6xf+c8MCGrr7DzNhm42LOQiHTa4MwX4x96q7235oiAU
+  #        iQqSI/hyF5yLpWw4etyUvsx2/0/0wkuTU1FozbLoCWJEWcPS7QadMrRRISxHf0YobIeQyz34regl
+  #        t1qSQ3dCU9D6AHLgX6kqllx4X0fnFq7LtfN7fA2itW26v+kAT2QFZ3qZhINGfofCja/pITC1uNAZ
+  #        gsJaTMcQ600krj/ynoxnjT+n1gmeqThac6/Mi3YlVeRtaxI2InL82ZuD+w/dfY9OpPssQjy3xiQa
+  #        jPuaMWXRxz/sS9syOoGVH7XBwKrWpQcpchozWJt40QV5DslJkclcr8aC2AGlzuJMTdEgz1eqV0+H
+  #        bAXG9HRHN/0eJTn1/QAAAAEABVguNTA5AAADjzCCA4swggJzAhRGqVxH4HTLYPGO4rzHcCPeGDKn
+  #        xTANBgkqhkiG9w0BAQsFADCBgTELMAkGA1UEBhMCY2ExEDAOBgNVBAgMB29udGFyaW8xEDAOBgNV
+  #        BAcMB3Rvcm9udG8xFDASBgNVBAoMC2plbmtpbnN0ZXN0MRkwFwYDVQQDDBBqZW5raW5zdGVzdC5p
+  #        bmZvMR0wGwYJKoZIhvcNAQkBFg50ZXN0QHRlc3QuaW5mbzAeFw0xOTEwMDgxNTI5NTVaFw0xOTEx
+  #        MDcxNTI5NTVaMIGBMQswCQYDVQQGEwJjYTEQMA4GA1UECAwHb250YXJpbzEQMA4GA1UEBwwHdG9y
+  #        b250bzEUMBIGA1UECgwLamVua2luc3Rlc3QxGTAXBgNVBAMMEGplbmtpbnN0ZXN0LmluZm8xHTAb
+  #        BgkqhkiG9w0BCQEWDnRlc3RAdGVzdC5pbmZvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+  #        AQEA02q352JTHGvROMBhSHvSv+vnoOTDKSTz2aLQn0tYrIRqRo+8bfmMjXuhkwZPSnCpvUGNAJ+w
+  #        Jrt/dqMoYUjCBkjylD/qHmnXN5EwS1cMg1Djh65gi5JJLFJ7eNcoSsr/0AJ+TweIal1jJSP3t3PF
+  #        9Uv21gm6xdm7HnNK66WpUUXLDTKaIs/jtagVY1bLOo9oEVeLN4nT2CYWztpMvdCyEDUzgEdDbmrP
+  #        F5nKUPK5hrFqo1Dc5rUI4ZshL3Lpv398aMxv6n2adQvuL++URMEbXXBhxOrT6rCtYzbcR5fkwS9i
+  #        d3Br45CoWOQro02JAepoU0MQKY5+xQ4Bq9Q7tB9BAwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQAe
+  #        4xc+mSvKkrKBHg9/zpkWgZUiOp4ENJCi8H4tea/PCM439v6y/kfjT/okOokFvX8N5aa1OSz2Vsrl
+  #        m8kjIc6hiA7bKzT6lb0EyjUShFFZ5jmGVP4S7/hviDvgB5yEQxOPpumkdRP513YnEGj/o9Pazi5h
+  #        /MwpRxxazoda9r45kqQpyG+XoM4pB+Fd3JzMc4FUGxfVPxJU4jLawnJJiZ3vqiSyaB0YyUL+Er1Q
+  #        6NnqtR4gEBF0ZVlQmkycFvD4EC2boP943dLqNUvop+4R3SM1QMM6P5u8iTXtHd/VN4MwMyy1wtog
+  #        hYAzODo1Jt59pcqqKJEas0C/lFJEB3frw4ImNx5fNlJYOpx+ijfQs9m39CevDq0=
 
   agent:
     # -- Enable Kubernetes plugin jnlp-agent podTemplate
     enabled: false
     # -- The name of the pod template to use for providing default values
     defaultsProviderTemplate: ""
+
+    # Useful for not including a serviceAccount in the template if `false`
+    # -- Use `serviceAccountAgent.name` as the default value for defaults template `serviceAccount`
+    useDefaultServiceAccount: false
+
+    # -- Override the default service account
+    # @default -- `serviceAccountAgent.name` if `agent.useDefaultServiceAccount` is `true`
+    serviceAccount:
 
     # For connecting to the Jenkins controller
     # -- Overrides the Kubernetes Jenkins URL
@@ -888,6 +923,10 @@ jenkins:
     # connects to the specified host and port, instead of connecting directly to the Jenkins controller
     # -- Overrides the Kubernetes Jenkins tunnel
     jenkinsTunnel:
+    # -- Disables the verification of the controller certificate on remote connection. This flag correspond to the "Disable https certificate check" flag in kubernetes plugin UI
+    skipTlsVerify: false
+    # -- Enable the possibility to restrict the usage of this agent to specific folder. This flag correspond to the "Restrict pipeline support to authorized folders" flag in kubernetes plugin UI
+    usageRestricted: false
     # -- The connection timeout in seconds for connections to Kubernetes API. The minimum value is 5
     kubernetesConnectTimeout: 5
     # -- The read timeout in seconds for connections to Kubernetes API. The minimum value is 15
@@ -908,7 +947,7 @@ jenkins:
       # -- Repository to pull the agent jnlp image from
       repository: "jenkins/inbound-agent"
       # -- Tag of the image to pull
-      tag: "3248.v65ecb_254c298-1"
+      tag: "3261.v9c670a_4748a_9-1"
     # -- Configure working directory for default agent
     workingDir: "/home/jenkins/agent"
     nodeUsageMode: "NORMAL"
@@ -929,7 +968,7 @@ jenkins:
     # -- Enables the agent to use the host network
     hostNetworking: false
     # -- Resources allocation (Requests and Limits)
-    resources: 
+    resources:
       requests:
         cpu: "512m"
         memory: "512Mi"
@@ -939,12 +978,12 @@ jenkins:
         memory: "512Mi"
         # ephemeralStorage:
     livenessProbe: {}
-#    execArgs: "cat /tmp/healthy"
-#    failureThreshold: 3
-#    initialDelaySeconds: 0
-#    periodSeconds: 10
-#    successThreshold: 1
-#    timeoutSeconds: 1
+  #    execArgs: "cat /tmp/healthy"
+  #    failureThreshold: 3
+  #    initialDelaySeconds: 0
+  #    periodSeconds: 10
+  #    successThreshold: 1
+  #    timeoutSeconds: 1
 
     # You may want to change this to true while testing a new image
     # -- Always pull agent container image before build
@@ -953,7 +992,7 @@ jenkins:
     # the jnlp container cannot be scheduled without overriding its container definition with a securityContext.
     # This option allows to automatically inject in the jnlp container a securityContext
     # that is suitable for the use of the restricted Pod Security Standard.
-    # -- Set a restricted securityContext on jnlp c/usr/share/jenkins/jenkins.warontainers
+    # -- Set a restricted securityContext on jnlp containers
     restrictedPssSecurityContext: false
     # Controls how agent pods are retained after the Jenkins build completes
     # Possible values: Always, Never, OnFailure
@@ -1061,6 +1100,18 @@ jenkins:
     # -- Agent Pod base name
     podName: "default"
 
+    # Enables garbage collection of orphan pods for this Kubernetes cloud. (beta)
+    garbageCollection:
+      # -- When enabled, Jenkins will periodically check for orphan pods that have not been touched for the given timeout period and delete them.
+      enabled: false
+      # -- Namespaces to look at for garbage collection, in addition to the default namespace defined for the cloud. One namespace per line.
+      namespaces: ""
+      # namespaces: |-
+      #   namespaceOne
+      #   namespaceTwo
+      # -- Timeout value for orphaned pods
+      timeout: 300
+
     # -- Allows the Pod to remain active for reuse until the configured number of minutes has passed since the last step was executed on it
     idleMinutes: 0
 
@@ -1081,6 +1132,8 @@ jenkins:
 
     # -- Defines how the raw yaml field gets merged with yaml definitions from inherited pod templates. Possible values: "merge" or "override"
     yamlMergeStrategy: "override"
+    # -- Controls whether the defined yaml merge strategy will be inherited if another defined pod template is configured to inherit from the current one
+    inheritYamlMergeStrategy: false
     # -- Timeout in seconds for an agent to be online
     connectTimeout: 100
     # -- Annotations to apply to the pod
@@ -1133,8 +1186,8 @@ jenkins:
     #          resourceLimitCpu: "1"
     #          resourceLimitMemory: "1024Mi"
 
-    # Inherits all values from `agent` so you only need to specify values which differ
-    # -- Configure additional
+  # Inherits all values from `agent` so you only need to specify values which differ
+  # -- Configure additional
   additionalAgents: {}
   #  maven:
   #    podName: maven
@@ -1154,7 +1207,7 @@ jenkins:
   #    command: "/bin/sh -c"
   #    args: "cat"
   #    TTYEnabled: true
-  
+
   # Here you can add additional clouds
   # They inherit all values from the default cloud (including the main agent), so
   # you only need to specify values which differ. If you want to override
@@ -1304,4 +1357,3 @@ jenkins:
         repository: "bats/bats"
         # -- Tag of the image to test the framework
         tag: "1.11.0"
-
