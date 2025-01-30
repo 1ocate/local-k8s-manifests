@@ -1165,7 +1165,7 @@ grafana:
       capabilities:
         drop: ['ALL']
       allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
+      readOnlyRootFilesystem: false
     ## image-renderer pod annotation
     podAnnotations: {}
     # image-renderer deployment Host Aliases
