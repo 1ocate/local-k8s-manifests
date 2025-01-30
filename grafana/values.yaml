@@ -101,7 +101,7 @@ grafana:
     # -- Docker image repository
     repository: grafana/grafana
     # Overrides the Grafana image tag whose default is the chart appVersion
-    tag: "11.0.0"
+    tag: "11.0.9"
     sha: ""
     pullPolicy: IfNotPresent
 
@@ -372,7 +372,7 @@ grafana:
     ## Sub-directory of the PV to mount. Can be templated.
     # subPath: ""
     ## Name of an existing PVC. Can be templated.
-    existingClaim: grafana-pvc2
+    existingClaim: grafana-pvc 
     ## Extra labels to apply to a PVC.
     extraPvcLabels: {}
 
@@ -1165,7 +1165,7 @@ grafana:
       capabilities:
         drop: ['ALL']
       allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: false
+      readOnlyRootFilesystem: true
     ## image-renderer pod annotation
     podAnnotations: {}
     # image-renderer deployment Host Aliases
