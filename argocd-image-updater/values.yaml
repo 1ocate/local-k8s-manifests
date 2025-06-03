@@ -127,7 +127,7 @@ argocd-image-updater:
       # -- If specified, use an unencrypted HTTP connection to the Argo CD API instead of TLS.
       plaintext: false
       # -- If specified, the secret with Argo CD API key will be created.
-      token: ""
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJpbWFnZS11cGRhdGVyOmFwaUtleSIsIm5iZiI6MTc0ODk1MDUyMywiaWF0IjoxNzQ4OTUwNTIzLCJqdGkiOiI5ZDNhMmUyMS1jMzQ3LTRkYTUtODIyNy0zOGU5NzZhNDNiMGEifQ.FOYQ3FVYpCtv4VN6iwHXenB_RMoN35Mh-nOJgtFzUBY"
       # -- Name of the Secret containing the token
       tokenSecretName: "argocd-image-updater-secret"
 
