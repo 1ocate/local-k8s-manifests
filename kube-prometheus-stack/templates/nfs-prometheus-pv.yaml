@@ -8,7 +8,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-prometheus
+  storageClassName: ""
   nfs:
     path: /mnt/nfs/kube-prometheus-stack/nfs-prometheus  # NFS 서버의 공유 디렉토리 경로
     server: 10.10.1.1  # NFS 서버의 주소
