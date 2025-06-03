@@ -8,6 +8,7 @@ spec:
   accessModes:
     - ReadWriteMany  # 여러 노드에서 읽기/쓰기가 가능하도록 설정
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   nfs:
     path: /mnt/nfs/kube-prometheus-stack/nfs-alertmanager  # NFS 서버의 공유 디렉토리 경로
     server: 10.10.1.1  # NFS 서버의 주소
