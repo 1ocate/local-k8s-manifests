@@ -24,10 +24,10 @@ kube-prometheus-stack:
         cert-manager.io/cluster-issuer: "letsencrypt"
         cert-manager.io/acme-challenge-type: http01
       hosts:
-        - grafana-k8s.bluekey.kr
+        - grafana-k8s.duckdns.org
       tls:
         - hosts:
-            - grafana-k8s.bluekey.kr
+            - grafana-k8s.duckdns.org
           secretName: grafana-ssl
     defaultDashboardsTimezone: Asia/Seoul
 
@@ -84,4 +84,3 @@ kube-prometheus-stack:
     enabled: false
     upgradeJob:
       enabled: false
-
