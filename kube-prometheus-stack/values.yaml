@@ -43,7 +43,7 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: ""
+            storageClassName: nfs-prometheus
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
@@ -58,7 +58,7 @@ kube-prometheus-stack:
       storage:
         volumeClaimTemplate:
           spec:
-            storageClassName: ""
+            storageClassName: nfs-alertmanager
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
