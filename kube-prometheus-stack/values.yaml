@@ -1,0 +1,87 @@
+kube-prometheus-stack:
+  # 공통 설정
+  global:
+    rbac:
+      create: true
+
+  # Grafana 설정
+  grafana:
+    enabled: true
+    persistence:
+      enabled: true
+      storageClassName: nfs-kube-prometheus-stack
+      accessModes: ["ReadWriteMany"]
+      size: 500Mi
+    adminPassword: admin
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        cert-manager.io/cluster-issuer: "letsencrypt"
+        cert-manager.io/acme-challenge-type: http01
+      hosts:
+        - grafana-k8s.bluekey.kr
+      tls:
+        - hosts:
+            - grafana-k8s.bluekey.kr
+          secretName: grafana-ssl
+    defaultDashboardsTimezone: Asia/Seoul
+
+  # Prometheus 설정
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      serviceMonitorSelector: {}
+      serviceMonitorNamespaceSelector: {}
+      retention: 15d
+      ruleSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: nfs-kube-prometheus-stack
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                # 현재 30Gi 
+                storage: 5Gi
+    service:
+      type: ClusterIP
+
+  # Alertmanager 설정
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: nfs-kube-prometheus-stack
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 1Gi
+    service:
+      type: ClusterIP
+
+  # node-exporter 비활성화
+  nodeExporter:
+    enabled: true
+
+  # kube-state-metrics 비활성화 (필요시 추후 활성화)
+  kubeStateMetrics:
+    enabled: true
+
+  # kube-proxy 비활성화
+  kubeProxy:
+    enabled: false
+
+  # CRDs 수동관리 crd_add.sh로 수동 추가
+  crds:
+    enabled: false
+    upgradeJob:
+      enabled: false
+
