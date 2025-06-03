@@ -42,7 +42,7 @@ crds:
 global:
   # -- Default domain used by all components
   ## Used for ingresses, certificates, SSO, notifications, etc.
-  domain: localhost
+  domain: argocd.local
 
   # -- Common labels for the all resources
   additionalLabels: {}
@@ -183,6 +183,10 @@ configs:
     # -- Enable local admin user
     ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
     admin.enabled: true
+
+    # -- Add account
+    ## Ref: https://argo-cd.readthedocs.io/en/latest/faq/#how-to-disable-admin-user
+    accounts.image-updater: apiKey,login
 
     # -- Timeout to discover if a new manifests version got published to the repository
     timeout.reconciliation: 180s
