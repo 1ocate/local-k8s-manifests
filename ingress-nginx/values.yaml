@@ -3,3 +3,21 @@ ingress-nginx:
   #위의 에러를 해결하기 위해 권한 추가
   controller:
     allowSnippetAnnotations: true
+    enableAnnotationValidations: false
+    kind: DaemonSet
+    service:
+      enabled: true
+      type: LoadBalancer
+      loadBalancerIP: 10.10.1.6
+      externalTrafficPolicy: Local
+    config: 
+      use-http2: "false"
+      proxy-connect-timeout: "75"
+      proxy-read-timeout: "300"
+      max-conns-per-server: "100"
+      #http2-max-concurrent-streams: "100"
+      proxy-body-size: "50m"
+      annotations-risk-level: "Critical"
+      use-forwarded-headers: "true"
+      compute-full-forwarded-for: "true"
+    ConfigAnnotations: {}
