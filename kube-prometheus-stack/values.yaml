@@ -9,7 +9,7 @@ kube-prometheus-stack:
     enabled: true
     persistence:
       enabled: true
-      storageClassName: nfs-kube-prometheus-stack
+      storageClassName: nfs-grafana
       accessModes: ["ReadWriteMany"]
       size: 500Mi
     adminPassword: admin
@@ -43,12 +43,11 @@ kube-prometheus-stack:
       storageSpec:
         volumeClaimTemplate:
           spec:
-            storageClassName: nfs-kube-prometheus-stack
+            storageClassName: nfs-prometheus
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
-                # 현재 30Gi 
-                storage: 5Gi
+                storage: 10Gi
     service:
       type: ClusterIP
 
@@ -59,7 +58,7 @@ kube-prometheus-stack:
       storage:
         volumeClaimTemplate:
           spec:
-            storageClassName: nfs-kube-prometheus-stack
+            storageClassName: nfs-alertmanager
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:

@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs-kube-prometheus-stack-pv
+  name: kube-prometheus-pv
 spec:
   capacity:
-    storage: 30Gi  # 명시적으로 용량을 설정
+    storage: 10Gi  # 명시적으로 용량을 설정
   accessModes:
     - ReadWriteMany  # 여러 노드에서 읽기/쓰기가 가능하도록 설정
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-kube-prometheus-stack
+  storageClassName: nfs-prometheus
   nfs:
-    path: /mnt/nfs/kube-prometheus-stack  # NFS 서버의 공유 디렉토리 경로
+    path: /mnt/nfs/kube-prometheus-stack/nfs-prometheus  # NFS 서버의 공유 디렉토리 경로
     server: 10.10.1.1  # NFS 서버의 주소
-
