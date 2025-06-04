@@ -8,5 +8,5 @@ spec:
     - ReadWriteMany  # 여러 노드에서 읽기/쓰기가 가능하도록 설정
   resources:
     requests:
-      storage: 10Gi
+      storage: 20Gi
   storageClassName: nfs-zabbix-db

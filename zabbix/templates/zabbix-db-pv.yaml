@@ -4,7 +4,7 @@ metadata:
   name: zabbix-db-pv
 spec:
   capacity:
-    storage: 10Gi  # 명시적으로 용량을 설정
+    storage: 20Gi  # 명시적으로 용량을 설정
   accessModes:
     - ReadWriteMany  # 여러 노드에서 읽기/쓰기가 가능하도록 설정
   persistentVolumeReclaimPolicy: Retain

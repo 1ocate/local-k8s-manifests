@@ -141,7 +141,7 @@ zabbix:
     service:
       # -- Type of service to expose the application. Valid options are ExternalName, ClusterIP, NodePort, and LoadBalancer. 
       #More details: https://kubernetes.io/docs/concepts/services-networking/service/
-      type: LoadBalancer
+      type: NodePort
       # -- clusterIP is the IP address of the service and is usually assigned randomly. 
       #If an address is specified manually, is in-range (as per system configuration), and is not in use, it will be allocated to the service.
       clusterIP: ""
@@ -184,6 +184,10 @@ zabbix:
       value: 256M
     - name: ZBX_VALUECACHESIZE
       value: 256M
+    - name: ZBX_MAXHOUSEKEEPERDELETE
+      value: 100000
+    - name: ZBX_PROBLEMHOUSEKEEPINGFREQUENCY
+      value: 30
     #- name: ENABLE_TIMESCALEDB
     #  value: "true"
     # -- Annotations to add to the deployment
@@ -236,7 +240,7 @@ zabbix:
       # -- Existing persistent volume claim name to be used to store posgres data
       existingClaimName: zabbix-db-pvc
       # -- Size of the PVC to be automatically generated
-      storageSize: 10Gi
+      storageSize: 20Gi
       # -- Kubernetes uses volume access modes to match PersistentVolumeClaims and PersistentVolumes. See: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
       claim_access_mode: "ReadWriteOnce"
       # -- Storage PVC storageclass to use
@@ -267,13 +271,19 @@ zabbix:
     # -- Labels to add to the containers
     containerLabels: {}
     # -- Additional volumeMounts to the postgresql container
-    extraVolumeMounts: []
+    extraVolumeMounts:
+      - name: dshm
+        mountPath: /dev/shm
     # -- Additional containers to start within the postgresql pod
     extraContainers: []
     # -- Additional init containers to start within the postgresql pod
     extraInitContainers: []
     # -- Additional volumes to make available to the postgresql pod
-    extraVolumes: []
+    extraVolumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          sizeLimit: 512Mi
     # -- Additional specifications to the postgresql pod
     extraPodSpecs: {}
     # -- Security Context configurations. Reference: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -535,25 +545,20 @@ zabbix:
       # letsencrypt 설정
       cert-manager.io/cluster-issuer: "letsencrypt"
       cert-manager.io/acme-challenge-type: http01
-      # zabbbix 경로 설정
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
-      # zabbix 경로뒤에 슬래시를 붙이지 않아도 이동하게 설정
-      nginx.ingress.kubernetes.io/configuration-snippet: |
-        rewrite ^(/zabbix)$ $1/ permanent;
-      kubernetes.io/ingress.class: nginx
-      kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
     hosts:
-      - host: zabbix-k8s.duckdns.org
+      - host: zabbix-k8s.duckddns.org
         paths:
-          - path: /zabbix(/|$)(.*)
+          - path: /
             pathType: ImplementationSpecific
     # -- Ingress TLS configuration
     tls:
       - secretName: zabbix-secret
         hosts:
-          - zabbix-k8s.duckdns.org
+          - zabbix-k8s.duckddns.org
     ingressClassName: nginx
-    #pathType: Prefix
+    pathType: Prefix
 
 # -- nodeSelector configurations. Reference: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
   nodeSelector: {}
@@ -579,12 +584,17 @@ zabbix:
     # -- Automount API credentials for a Service Account.
     automountServiceAccountToken: true
 
+## Service accoun for Kubernetes API
   rbac:
-    # -- Specifies whether the RBAC resources should be created
+    ## rbac.create  Specifies whether the RBAC resources should be created
     create: true
     additionalRulesForClusterRole: []
-    #  - apiGroups: [ "" ]
-    #    resources:
-    #      - nodes/proxy
-    #    verbs: [ "get", "list", "watch" ]
-
+    ##  - apiGroups: [ "" ]
+    ##    resources:
+    ##      - nodes/proxy
+    ##    verbs: [ "get", "list", "watch" ]
+  serviceAccount:
+    ## serviceAccount.create  Specifies whether a service account should be created
+    create: true
+    ## serviceAccount.name  The name of the service account to use. If not set name is generated using the fullname template
+    name: zabbix-service-account
