@@ -548,7 +548,7 @@ zabbix:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     hosts:
-      - host: zabbix-k8s.duckddns.org
+      - host: zabbix-k8s.duckdns.org
         paths:
           - path: /
             pathType: ImplementationSpecific
@@ -556,7 +556,7 @@ zabbix:
     tls:
       - secretName: zabbix-secret
         hosts:
-          - zabbix-k8s.duckddns.org
+          - zabbix-k8s.duckdns.org
     ingressClassName: nginx
     pathType: Prefix
 
